@@ -2,6 +2,7 @@
 // versions:
 //   sqlc v1.28.0
 // source: users.sql
+
 package database
 
 import (
@@ -44,6 +45,15 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.Name,
 	)
 	return i, err
+}
+
+const deleteUsers = `-- name: DeleteUsers :exec
+DELETE FROM users
+`
+
+func (q *Queries) DeleteUsers(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, deleteUsers)
+	return err
 }
 
 const getUser = `-- name: GetUser :one
