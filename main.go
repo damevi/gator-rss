@@ -23,15 +23,16 @@ func main() {
 
 	db, err := sql.Open("postgres", cfg.DbURL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("error connecting to db: %v", err)
 	}
-
-	dbQueries := *database.New(db)
+	defer db.Close()
+	dbQueries := database.New(db)
 
 	programState := &state{
 		cfg: &cfg,
-		db:  &dbQueries,
+		db:  dbQueries,
 	}
+
 	cmds := commands{
 		registeredCommands: make(map[string]func(*state, command) error),
 	}
